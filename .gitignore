@@ -1,0 +1,24 @@
+# Node & React
+frontend/node_modules/
+frontend/build/
+
+# PHP dependencies
+backend/vendor/
+
+# Composer files
+backend/composer.phar
+
+# Docker volumes
+*.log
+*.pid
+
+# IDEs
+.vscode/
+.idea/
+
+# OS files
+.DS_Store
+
+# Jenkins
+jenkins_home/
+

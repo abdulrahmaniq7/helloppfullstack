@@ -2,10 +2,17 @@ pipeline {
   agent any
 
   stages {
+    stage('Clean Workspace') {
+      steps {
+        deleteDir()  // Deletes all files in the current workspace
+      }
+    }
+
     stage('Checkout') {
       steps {
         // This checks out the code from your configured Git SCM
         checkout scm
+	sh 'ls -la'
       }
     }
 

@@ -1,15 +1,17 @@
 pipeline {
   agent any
+
   stages {
-    stage('Build') {
+    stage('Checkout') {
       steps {
-        sh 'docker-compose down'
-        sh 'docker-compose build'
+        git 'https://github.com/abdulrahmaniq7/helloppfullstack'
       }
     }
-    stage('Deploy') {
+
+    stage('Build & Deploy') {
       steps {
-        sh 'docker-compose up -d'
+        sh 'docker-compose down'
+        sh 'docker-compose up --build -d'
       }
     }
   }

@@ -2,12 +2,6 @@ pipeline {
   agent any
 
   stages {
-    stage('Checkout') {
-      steps {
-        git branch: 'main', url:'https://github.com/abdulrahmaniq7/helloppfullstack'
-      }
-    }
-
     stage('Build & Deploy') {
       steps {
         sh 'docker-compose down'

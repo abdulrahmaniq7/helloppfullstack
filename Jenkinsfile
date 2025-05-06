@@ -4,15 +4,20 @@ pipeline {
   stages {
     stage('Clean Workspace') {
       steps {
-        deleteDir()  // Deletes all files in the current workspace
+        deleteDir()  // Clean workspace to avoid leftovers
       }
     }
 
     stage('Checkout') {
       steps {
-        // This checks out the code from your configured Git SCM
-        checkout scm
-	sh 'ls -la'
+        git url: 'https://github.com/abdulrahmaniq7/helloppfullstack.git', branch: 'main'
+      }
+    }
+
+    stage('Debug Path') {
+      steps {
+        sh 'pwd'
+        sh 'ls -la'
       }
     }
 

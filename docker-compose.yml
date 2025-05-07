@@ -1,21 +1,42 @@
 version: '3.8'
+
 services:
   backend:
     build: ./bkapp
-    ports: [ "8000:8000" ]
-    depends_on: [ mysql ]
+    ports:
+      - "8000:8000"
+    depends_on:
+      - mysql
 
   frontend:
     build: ./feapp
-    ports: [ "3000:3000" ]
-    depends_on: [ backend ]
+    ports:
+      - "3000:3000"
+    depends_on:
+      - backend
 
   mysql:
     image: mysql:8
-    ports: [ "3307:3306" ]
+    ports:
+      - "3307:3306"
     environment:
       MYSQL_ROOT_PASSWORD: root
       MYSQL_DATABASE: hello
     volumes:
       - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+
+  jenkins:
+    build:
+      context: ./jenkins
+    ports:
+      - "8081:8080"
+    volumes:
+      - jenkins_home:/var/jenkins_home
+      - /var/run/docker.sock:/var/run/docker.sock
+    environment:
+      JAVA_OPTS: "-Djenkins.install.runSetupWizard=false"
+    user: root
+
+volumes:
+  jenkins_home:
 

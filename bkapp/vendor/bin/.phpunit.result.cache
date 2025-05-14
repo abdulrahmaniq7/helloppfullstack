@@ -1,0 +1,1 @@
+{"version":1,"defects":{"CalculatorTest::testSubtract":4,"CalculatorTest::testJson":3},"times":{"CalculatorTest::testAdd":0.002,"ApiTest::testGetGreeting":0.001,"ApiTest::testGetGreetingWithEmptyName":0,"CalculatorTest::testSubtract":0,"CalculatorTest::testJson":0.001}}

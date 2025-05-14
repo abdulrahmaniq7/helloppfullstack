@@ -1,12 +1,30 @@
-FROM php:8.1-cli
+# Use official PHP with Apache image
+FROM php:8.1-apache
 
-RUN apt-get update && apt-get install -y unzip && docker-php-ext-install pdo pdo_mysql
+# Install dependencies
+RUN apt-get update && apt-get install -y openssl unzip && docker-php-ext-install pdo pdo_mysql
 
-WORKDIR /app
+# Set working directory
+WORKDIR /var/www/html
+
+# Copy project files
 COPY . .
 
-RUN curl -sS https://getcomposer.org/installer | php && php composer.phar install
+# Copy SSL configuration (optional, for HTTPS)
+COPY config/ssl.conf /etc/apache2/sites-available/ssl.conf
+COPY server.crt /etc/ssl/server.crt
+COPY server.key /etc/ssl/server.key
 
-CMD ["php", "-S", "0.0.0.0:8000"]
-EXPOSE 8000
+# Enable SSL and your custom SSL site configuration
+RUN a2enmod ssl
+RUN a2ensite ssl.conf
+
+# Enable Apache Rewrite Module (for .htaccess support)
+RUN a2enmod rewrite
+
+# Expose HTTP and HTTPS ports
+EXPOSE 80 443
+
+# Start Apache server
+CMD ["apache2-foreground"]
 

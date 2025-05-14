@@ -1,0 +1,25 @@
+version: '3.8'
+
+services:
+  jenkins:
+    build:
+      context: ./jenkins
+      dockerfile: Dockerfile  # Make sure you have the Dockerfile here
+    user: root
+    ports:
+      - "8081:8080"                # Jenkins UI
+    volumes:
+      - jenkins_home:/var/jenkins_home  # Persistent Jenkins data
+      - /var/run/docker.sock:/var/run/docker.sock  # Docker control from Jenkins
+      - /usr/bin/docker:/usr/bin/docker            # Docker CLI
+      - /usr/lib/x86_64-linux-gnu/libltdl.so.7:/usr/lib/x86_64-linux-gnu/libltdl.so.7  # Docker dependency
+    networks:
+      - mainapp_network  # Connect Jenkins to the shared network
+
+volumes:
+  jenkins_home:
+
+networks:
+  mainapp_network:
+    external: true  # Use the existing network, so it’s shared with the other services
+

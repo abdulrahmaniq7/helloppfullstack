@@ -2,18 +2,31 @@ version: '3.8'
 
 services:
   backend:
-    build: ./bkapp
+    build:
+      context: ./bkapp
+      dockerfile: Dockerfile
     ports:
-      - "8000:8000"
+      - "8080:80"        # Apache HTTP
+      - "8443:443"       # Apache HTTPS
     depends_on:
       - mysql
+    volumes:
+      - ./bkapp:/var/www/html
+    networks:
+      - mainapp_network  # Connect backend to the shared network
 
   frontend:
-    build: ./feapp
+    build:
+      context: ./feapp
+      dockerfile: Dockerfile
     ports:
       - "3000:3000"
     depends_on:
       - backend
+    environment:
+      - REACT_APP_API_URL=http://localhost
+    networks:
+      - mainapp_network  # Connect frontend to the shared network
 
   mysql:
     image: mysql:8
@@ -22,21 +35,18 @@ services:
     environment:
       MYSQL_ROOT_PASSWORD: root
       MYSQL_DATABASE: hello
+      MYSQL_USER: user
+      MYSQL_PASSWORD: password
     volumes:
+      - mysql_data:/var/lib/mysql
       - ./init.sql:/docker-entrypoint-initdb.d/init.sql
-
-  jenkins:
-    build:
-      context: ./jenkins
-    ports:
-      - "8081:8080"
-    volumes:
-      - jenkins_home:/var/jenkins_home
-      - /var/run/docker.sock:/var/run/docker.sock
-    environment:
-      JAVA_OPTS: "-Djenkins.install.runSetupWizard=false"
-    user: root
+    networks:
+      - mainapp_network  # Connect mysql to the shared network
 
 volumes:
-  jenkins_home:
+  mysql_data:
+
+networks:
+  mainapp_network:
+    external: true  # Reference the existing external network if it exists
 

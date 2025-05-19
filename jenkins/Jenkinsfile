@@ -1,38 +1,53 @@
 pipeline {
   agent any
 
-  environment {
-    DOCKER_BUILDKIT = 1   // Use Docker BuildKit for faster builds
-  }
-
   stages {
     stage('Clean Workspace') {
       steps {
-        deleteDir()  // Ensure clean workspace
+        deleteDir() // Remove old files in workspace
       }
     }
 
     stage('Checkout') {
       steps {
-        // This checks out the code from your configured Git SCM
-        checkout scm
+        script {
+          echo "Starting Git Checkout..."
+          git url: 'https://github.com/abdulrahmaniq7/helloppfullstack.git', branch: 'main'
+        }
       }
     }
 
-    stage('Build & Deploy') {
+    stage('Create Shared Docker Network') {
       steps {
-        script {
-          try {
-            echo "Stopping existing containers..."
-            sh 'docker-compose down || true'  // Ensure it doesn't fail if containers are not running
-            echo "Building and starting containers..."
-            sh 'docker-compose up --build -d'
-          } catch (e) {
-            echo "Error during Build & Deploy: ${e}"
-            error("Build & Deploy failed")
-          }
-        }
+        sh 'docker network create mainapp_network || true'
+      }
+    }
+
+    stage('Stop Previous Containers') {
+      steps {
+        // Ensure old containers are stopped
+        sh 'docker-compose -f docker-compose.yml down --remove-orphans || true'
+      }
+    }
+
+    stage('Remove MySQL Data Volume') {
+      steps {
+        // Optional: remove to re-run init.sql
+        sh 'docker volume rm mainapp_mysql_data || true'
+      }
+    }
+
+    stage('Build and Start Services') {
+      steps {
+        sh 'docker-compose -f docker-compose.yml up --build -d'
+      }
+    }
+
+    stage('Verify Deployment') {
+      steps {
+        sh 'docker ps' // Show running containers
       }
     }
   }
 }
+

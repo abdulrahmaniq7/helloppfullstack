@@ -13,6 +13,7 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock  # Docker control from Jenkins
       - /usr/bin/docker:/usr/bin/docker            # Docker CLI
       - /usr/lib/x86_64-linux-gnu/libltdl.so.7:/usr/lib/x86_64-linux-gnu/libltdl.so.7  # Docker dependency
+      - /home/abdul/projects/docker/mainapp:/app
     networks:
       - mainapp_network  # Connect Jenkins to the shared network
 

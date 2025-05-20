@@ -1,4 +1,15 @@
 import { useState, useEffect } from "react";
+import { SplitScreen } from "./SplitScreen"
+
+const Left = ()=>{
+	return <h1>Left</h1>;
+};
+
+const Right = ()=>{
+	return <h1>Right, learn react</h1>;
+}
+
+
 
 function App() {
   const [token, setToken] = useState(localStorage.getItem("token") || "");
@@ -28,7 +39,8 @@ function App() {
 
   return token ? <h1>{message}</h1> : (
     <div>
-      <input onChange={e => setEmail(e.target.value)} placeholder="email" />
+      <SplitScreen left={Left} right={Right} />
+      <input onChange={e => setEmail(e.target.value)} placeholder="email-ido" />Email
       <input onChange={e => setPassword(e.target.value)} placeholder="password" type="password" />
       <button onClick={login}>Login</button>
     </div>

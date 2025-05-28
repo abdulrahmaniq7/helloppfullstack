@@ -1,12 +1,12 @@
 # Node & React
-frontend/node_modules/
-frontend/build/
+feapp/node_modules/
+feapp/build/
 
 # PHP dependencies
-backend/vendor/
+bkapp/vendor/
 
 # Composer files
-backend/composer.phar
+bkapp/composer.phar
 
 # Docker volumes
 *.log

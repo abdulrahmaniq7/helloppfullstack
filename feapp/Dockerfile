@@ -1,8 +1,18 @@
-FROM node:18
+FROM node:20
 
 WORKDIR /app
+
+# Copy only package files first for better caching
+COPY package*.json ./
+
+RUN rm -rf node_modules package-lock.json && npm install
+
+# Copy the rest of the app
 COPY . .
-RUN npm install && npm run build
+
+# Build the production version
+RUN npm run build
+
 
 RUN npm install -g serve
 CMD ["serve", "-s", "build"]
